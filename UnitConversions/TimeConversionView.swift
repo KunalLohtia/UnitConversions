@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TimeConversionView: View {
     @State private var amount = 0.0
-    @State private var initialUnits = ""
+    @State private var initialUnits = "Seconds"
     @State private var conversion = ""
     @State private var result: String?
     
@@ -46,7 +46,7 @@ struct TimeConversionView: View {
     }
     
     // calling the above functions and formatting
-    func convertLength() {
+    func convertTime() {
         let amountInSec = convertToSeconds(units: initialUnits, val: amount)
         let output = convertFromSec(amountInSec: amountInSec, to: conversion)
         result = String(format: "%.2f", output)
@@ -83,7 +83,7 @@ struct TimeConversionView: View {
                 .labelsHidden()
                 
                 Button(action: {
-                        convertLength()
+                        convertTime()
                     }) {
                         Text("Convert")
                             .font(.headline)

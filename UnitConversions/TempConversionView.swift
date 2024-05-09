@@ -9,39 +9,42 @@ import SwiftUI
 
 struct TempConversionView: View {
     @State private var amount = 0.0
-    @State private var initialUnits = ""
+    @State private var initialUnits = "Fahrenheit"
     @State private var conversion = ""
     @State private var result: String?
     
     // setting focus state to hide keyboard as needed
     @FocusState private var amountIsFocused: Bool
     
-    // Function to convert temperature
-    func convertTemperature() {
-        let inputTemperature = amount
-        let outputTemperature: Double
-        
-        let initialUnitsTrimmed = initialUnits.trimmingCharacters(in: .whitespacesAndNewlines)
-        let conversionTrimmed = conversion.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        switch (initialUnitsTrimmed, conversionTrimmed) {
-        case ("Fahrenheit", "Celsius"):
-            outputTemperature = (inputTemperature - 32) * (5/9)
-        case ("Celsius", "Fahrenheit"):
-            outputTemperature = (inputTemperature * (9/5)) + 32
-        case ("Kelvin", "Celsius"):
-            outputTemperature = inputTemperature - 273.15
-        case ("Celsius", "Kelvin"):
-            outputTemperature = inputTemperature + 273.15
-        case ("Kelvin", "Fahrenheit"):
-            outputTemperature = (inputTemperature - 273.15) * (9/5) + 32
-        case ("Fahrenheit", "Kelvin"):
-            outputTemperature = (inputTemperature - 32) * (5/9) + 273.15
-        default:
-            outputTemperature = inputTemperature
+    // Function to convert initial input to base unit of celsius
+        func convertToCelsius(units: String, val: Double) -> Double {
+            switch units {
+            case "Fahrenheit":
+                return (val - 32) * (5/9)
+            case "Kelvin":
+                return val - 273.15
+            default:
+                return val
+            }
         }
-        
-        result = String(format: "%.2f", outputTemperature)
+    
+    // taking celsius and converting to desired unit
+    func convertFromCelsius(amountInCels: Double, to units: String) -> Double {
+        switch units {
+        case "Fahrenheit":
+            return (amountInCels * (9/5)) + 32
+        case "Kelvin":
+            return amountInCels + 273.15
+        default:
+            return amountInCels
+        }
+    }
+    
+    // calling the above functions and formatting
+    func convertTemp() {
+        let amountInCels = convertToCelsius(units: initialUnits, val: amount)
+        let output = convertFromCelsius(amountInCels: amountInCels, to: conversion)
+        result = String(format: "%.2f", output)
     }
     
     var body: some View {
@@ -72,7 +75,7 @@ struct TempConversionView: View {
                 .labelsHidden()
                 
                 Button(action: {
-                    convertTemperature()
+                    convertTemp()
                 }) {
                     Text("Convert")
                         .font(.headline)

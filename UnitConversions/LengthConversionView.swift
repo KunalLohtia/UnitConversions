@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LengthConversionView: View {
     @State private var amount = 0.0
-    @State private var initialUnits = ""
+    @State private var initialUnits = "Meters"
     @State private var conversion = ""
     @State private var result: String?
     

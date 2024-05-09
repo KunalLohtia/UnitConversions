@@ -9,7 +9,7 @@ import SwiftUI
 
 struct VolumeConversionView: View {
     @State private var amount = 0.0
-    @State private var initialUnits = ""
+    @State private var initialUnits = "Milliliters"
     @State private var conversion = ""
     @State private var result: String?
     
@@ -49,7 +49,7 @@ struct VolumeConversionView: View {
     }
     
     // calling the above functions and formatting
-    func convertLength() {
+    func convertVol() {
         let amountInML = convertToML(units: initialUnits, val: amount)
         let output = convertFromML(amountInML: amountInML, to: conversion)
         result = String(format: "%.2f", output)
@@ -88,7 +88,7 @@ struct VolumeConversionView: View {
                 .labelsHidden()
                 
                 Button(action: {
-                        convertLength()
+                        convertVol()
                     }) {
                         Text("Convert")
                             .font(.headline)
