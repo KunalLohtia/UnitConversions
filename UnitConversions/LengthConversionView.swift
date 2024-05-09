@@ -13,7 +13,10 @@ struct LengthConversionView: View {
     @State private var conversion = ""
     @State private var result: String?
     
-    // Function to convert length
+    // setting focus state to hide keyboard as needed
+    @FocusState private var amountIsFocused: Bool
+    
+    // Function to convert initial input to base unit of meters
     func convertToMeters(units: String, val: Double) -> Double {
         switch units {
         case "Kilometers":
@@ -29,6 +32,7 @@ struct LengthConversionView: View {
         }
     }
     
+    // taking meters and converting to desired unit
     func convertFromMeters(amountInMeters: Double, to units: String) -> Double {
         switch units {
         case "Kilometers":
@@ -44,6 +48,7 @@ struct LengthConversionView: View {
         }
     }
     
+    // calling the above functions and formatting
     func convertLength() {
         let amountInMeters = convertToMeters(units: initialUnits, val: amount)
         let output = convertFromMeters(amountInMeters: amountInMeters, to: conversion)
@@ -55,6 +60,8 @@ struct LengthConversionView: View {
             Section("Enter Initial Amount") {
                 HStack {
                     TextField("Amount", value: $amount, format: .number)
+                        .keyboardType(.decimalPad)
+                        .focused($amountIsFocused)
                     Picker("Units", selection: $initialUnits) {
                         Text("Meters").tag("Meters")
                         Text("Kilometers").tag("Kilometers")
@@ -113,6 +120,19 @@ struct LengthConversionView: View {
                             }
                             .buttonStyle(PlainButtonStyle())
                         }
+            .navigationTitle("Length Conversions")
+            // toolbar modifier specifies toolbar items
+            // for a view
+            .toolbar {
+                // if amount is focused is true,
+                // click done to set amount is focused to
+                // false
+                if amountIsFocused{
+                    Button("Done"){
+                        amountIsFocused = false
+                    }
+                }
+            }
             }
         }
     }

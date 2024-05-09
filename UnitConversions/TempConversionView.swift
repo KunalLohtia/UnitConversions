@@ -13,6 +13,9 @@ struct TempConversionView: View {
     @State private var conversion = ""
     @State private var result: String?
     
+    // setting focus state to hide keyboard as needed
+    @FocusState private var amountIsFocused: Bool
+    
     // Function to convert temperature
     func convertTemperature() {
         let inputTemperature = amount
@@ -46,6 +49,8 @@ struct TempConversionView: View {
             Section("Enter Initial Amount") {
                 HStack {
                     TextField("Amount", value: $amount, format: .number)
+                    .keyboardType(.decimalPad)
+                    .focused($amountIsFocused)
                     Picker("Units", selection: $initialUnits) {
                         Text("Fahrenheit").tag("Fahrenheit")
                         Text("Celsius").tag("Celsius")
@@ -67,17 +72,17 @@ struct TempConversionView: View {
                 .labelsHidden()
                 
                 Button(action: {
-                        convertTemperature()
-                    }) {
-                        Text("Convert")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Color.blue)
-                            .cornerRadius(10)
-                    }
-                    .buttonStyle(PlainButtonStyle())
+                    convertTemperature()
+                }) {
+                    Text("Convert")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .cornerRadius(10)
+                }
+                .buttonStyle(PlainButtonStyle())
             }
             
             
@@ -87,21 +92,34 @@ struct TempConversionView: View {
                     Text("\(result) \(conversion)")
                 }
                 Button(action: {
-                                result = nil // Clear the result
-                            }) {
-                                Text("Clear Results")
-                                    .font(.headline)
-                                    .foregroundColor(.white)
-                                    .padding()
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color.red)
-                                    .cornerRadius(10)
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                        }
+                    result = nil // Clear the result
+                }) {
+                    Text("Clear Results")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.red)
+                        .cornerRadius(10)
+                }
+                .buttonStyle(PlainButtonStyle())
+            }
+            .navigationTitle("Temperature Conversions")
+            // toolbar modifier specifies toolbar items
+            // for a view
+            .toolbar {
+                // if amount is focused is true,
+                // click done to set amount is focused to
+                // false
+                if amountIsFocused{
+                    Button("Done"){
+                        amountIsFocused = false
+                    }
+                }
             }
         }
     }
+}
 
 
 #Preview {
